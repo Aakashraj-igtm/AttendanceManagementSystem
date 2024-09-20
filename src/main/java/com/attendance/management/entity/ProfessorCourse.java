@@ -7,6 +7,7 @@ import lombok.Data;
 @Entity
 @Data
 public class ProfessorCourse {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -18,4 +19,13 @@ public class ProfessorCourse {
     @ManyToOne
     @JoinColumn(name = "course_id", nullable = false)
     private Course course;
+
+    @Column(nullable = false)
+    private int noOfSeats;  // Total number of seats for the course
+
+    @Column(nullable = false)
+    private int availableSeats;  // Number of available seats for the course
+
+    @Column(nullable = false)
+    private double minAttendancePercentage;  // Minimum attendance percentage required
 }

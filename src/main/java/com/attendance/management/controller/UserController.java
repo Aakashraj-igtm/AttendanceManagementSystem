@@ -33,14 +33,19 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<String> signup(@RequestBody SignupRequestDto request) {
+    public ResponseEntity<?> signup(@RequestBody SignupRequestDto request) {
         try {
             User user = new User();
             user.setUsername(request.getUsername());
             user.setPassword(request.getPassword());
+            user.setFirstName(request.getFirstName());
+            user.setLastName(request.getLastName());
+            user.setPhoneNumber(request.getPhoneNumber());
             user.setEmail(request.getEmail());
             userService.registerUser(user, request.getRole());
-            return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully");
+            return ResponseEntity.status(HttpStatus.CREATED).body(
+                    "User registered successfully with uniqueId: " + user.getUniqueId()
+            );
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: " + e.getMessage());
         }

@@ -32,7 +32,10 @@ public class SecurityConfig {
         http.csrf().disable()
                 .authorizeHttpRequests()
                 .requestMatchers("/api/auth/**").permitAll()  // Allow public access to auth APIs
-                .requestMatchers("/api/courses/**").hasRole("Admin")  // Restrict course APIs to Admin only
+                .requestMatchers("/api/courses/**").hasRole("Admin")// Restrict course APIs to Admin
+                .requestMatchers("/api/student-courses/students").hasAnyRole("Admin", "Professor")  // Allow Admins and Professors to access the student list API
+                .requestMatchers("/api/professor-courses/**").hasAnyRole("Admin", "Professor")  // Allow only Admins and Professors to access professor-course APIs
+                .requestMatchers("/api/attendance/**").hasAnyRole("Professor")
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);  // Stateless JWT sessions

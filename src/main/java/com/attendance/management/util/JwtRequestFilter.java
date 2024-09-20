@@ -1,5 +1,6 @@
 package com.attendance.management.util;
 
+import io.jsonwebtoken.JwtException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -33,20 +34,32 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             jwtToken = authorizationHeader.substring(7);  // Remove "Bearer " from the token
-            username = jwtUtil.extractUsername(jwtToken);  // Extract the username from the token
+
+            try {
+                username = jwtUtil.extractUsername(jwtToken);  // Extract the username from the token
+            } catch (JwtException e) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write(e.getMessage());
+                return;
+            }
         }
 
         // If the token is valid, authenticate the request
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            try {
+                if (jwtUtil.validateToken(jwtToken, username)) {
+                    String role = jwtUtil.extractRole(jwtToken);  // Extract role from token
 
-            if (jwtUtil.validateToken(jwtToken, username)) {
-                String role = jwtUtil.extractRole(jwtToken);  // Extract role from token
+                    // Manually create a UsernamePasswordAuthenticationToken and set it in the context
+                    UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                            username, null, Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role)));
 
-                // Manually create a UsernamePasswordAuthenticationToken and set it in the context
-                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                        username, null, Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role)));
-
-                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                }
+            } catch (JwtException e) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write(e.getMessage());
+                return;
             }
         }
 

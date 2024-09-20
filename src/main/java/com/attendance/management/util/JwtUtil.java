@@ -1,8 +1,6 @@
 package com.attendance.management.util;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -17,10 +15,12 @@ public class JwtUtil {
     @Value("${jwt.secret}")
     private String SECRET_KEY; // Replace with your generated secret key
 
+    // Extract username from token
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
+    // Extract role from token
     public String extractRole(String token) {
         return (String) extractAllClaims(token).get("role");
     }
@@ -35,7 +35,16 @@ public class JwtUtil {
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
+        try {
+            return Jwts.parser()
+                    .setSigningKey(SECRET_KEY)
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (ExpiredJwtException e) {
+            throw new JwtException("Token is expired");
+        } catch (JwtException e) {
+            throw new JwtException("Invalid token");
+        }
     }
 
     private Boolean isTokenExpired(String token) {
@@ -54,12 +63,18 @@ public class JwtUtil {
                 .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))  // 10 hours expiration
-                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)  // Use HS256 signing with the secret key
-                .compact();  // Generates a compact URL-safe Base64-encoded JWT
+                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+                .compact();
     }
 
     public Boolean validateToken(String token, String username) {
-        final String extractedUsername = extractUsername(token);
-        return (extractedUsername.equals(username) && !isTokenExpired(token));
+        try {
+            final String extractedUsername = extractUsername(token);
+            return (extractedUsername.equals(username) && !isTokenExpired(token));
+        } catch (ExpiredJwtException e) {
+            throw new JwtException("Token is expired");
+        } catch (JwtException e) {
+            throw new JwtException("Invalid token");
+        }
     }
 }
