@@ -1,5 +1,6 @@
 package com.attendance.management.repo;
 
+import com.attendance.management.dto.CourseEnrollmentResponseDto;
 import com.attendance.management.dto.StudentResponseDto;
 import com.attendance.management.entity.StudentCourse;
 import com.attendance.management.entity.User;
@@ -27,4 +28,13 @@ public interface StudentCourseRepository extends JpaRepository<StudentCourse, Lo
     List<StudentResponseDto> findStudentsByCourseNoAndProfessorUniqueId(
             @Param("courseNo") String courseNo,
             @Param("professorUniqueId") String professorUniqueId);
+
+    @Query("SELECT new com.attendance.management.dto.CourseEnrollmentResponseDto(c.courseId, c.courseNo, c.courseName, c.description, " +
+            "p.firstName || ' ' || p.lastName, p.uniqueId) " +
+            "FROM StudentCourse sc " +
+            "JOIN sc.course c " +
+            "JOIN ProfessorCourse pc ON c.courseId = pc.course.courseId " +
+            "JOIN pc.professor p " +
+            "WHERE sc.student.uniqueId = :studentUniqueId")
+    List<CourseEnrollmentResponseDto> findEnrolledCoursesByStudentUniqueId(@Param("studentUniqueId") String studentUniqueId);
 }

@@ -1,5 +1,6 @@
 package com.attendance.management.controller;
 
+import com.attendance.management.dto.CourseEnrollmentResponseDto;
 import com.attendance.management.dto.StudentResponseDto;
 import com.attendance.management.entity.StudentCourse;
 import com.attendance.management.entity.User;
@@ -65,6 +66,20 @@ public class StudentCourseController {
                 return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No students found for this course and professor");
             }
             return ResponseEntity.ok(students);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: " + e.getMessage());
+        }
+    }
+
+    // API to get the list of courses a student is enrolled in
+    @GetMapping("/enrolled-courses")
+    public ResponseEntity<?> getEnrolledCourses(@RequestParam String studentUniqueId) {
+        try {
+            List<CourseEnrollmentResponseDto> enrolledCourses = studentCourseService.getEnrolledCourses(studentUniqueId);
+            if (enrolledCourses.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No courses found for the given student.");
+            }
+            return ResponseEntity.ok(enrolledCourses);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: " + e.getMessage());
         }

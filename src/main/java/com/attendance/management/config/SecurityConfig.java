@@ -14,6 +14,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class SecurityConfig {
@@ -31,11 +33,13 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeHttpRequests()
+                .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                 .requestMatchers("/api/auth/**").permitAll()  // Allow public access to auth APIs
                 .requestMatchers("/api/courses/**").hasRole("Admin")// Restrict course APIs to Admin
                 .requestMatchers("/api/student-courses/students").hasAnyRole("Admin", "Professor")  // Allow Admins and Professors to access the student list API
                 .requestMatchers("/api/professor-courses/**").hasAnyRole("Admin", "Professor")  // Allow only Admins and Professors to access professor-course APIs
-                .requestMatchers("/api/attendance/**").hasAnyRole("Professor")
+                .requestMatchers("/api/attendance/mark", "/api/attendance/update").hasAnyRole("Professor")
+                .requestMatchers("/api/attendance/calculate-percentage").hasAnyRole("Student")
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);  // Stateless JWT sessions
@@ -44,6 +48,20 @@ public class SecurityConfig {
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
+    }
+
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**")  // Enable CORS for all paths
+                        .allowedOrigins("http://localhost:4200")  // Allow all origins, replace "*" with your frontend URL for security
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")  // Allow all necessary HTTP methods
+                        .allowedHeaders("*")  // Allow all headers
+                        .allowCredentials(true);  // Allow credentials (important for cookie-based auth)
+            }
+        };
     }
 
     @Bean

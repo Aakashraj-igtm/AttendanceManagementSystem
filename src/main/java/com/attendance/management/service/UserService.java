@@ -24,7 +24,7 @@ public class UserService {
 
     // Register a new user with the role
     public User registerUser(User user, String roleName) {
-        Role role = roleRepository.findByName(roleName)
+        Role role = roleRepository.findByName (roleName)
                 .orElseThrow(() -> new RuntimeException("Role not found"));
 
         // Generate a unique 8-digit ID

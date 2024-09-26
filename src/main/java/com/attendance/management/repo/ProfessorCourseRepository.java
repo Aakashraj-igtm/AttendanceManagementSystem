@@ -18,4 +18,7 @@ public interface ProfessorCourseRepository extends JpaRepository<ProfessorCourse
     Optional<ProfessorCourse> findByProfessorAndCourse(@Param("professorUniqueId") String professorUniqueId,
                                                        @Param("courseId") Long courseId);
     boolean existsByProfessor_UserIdAndCourse_CourseId(Long professorId, Long courseId);
+
+    @Query("SELECT pc FROM ProfessorCourse pc WHERE pc.course.courseId = :courseId")
+    Optional<ProfessorCourse> findByCourse_CourseId(@Param("courseId") Long courseId);
 }

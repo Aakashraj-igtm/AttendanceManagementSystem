@@ -1,5 +1,6 @@
 package com.attendance.management.service;
 
+import com.attendance.management.dto.CourseEnrollmentResponseDto;
 import com.attendance.management.dto.StudentResponseDto;
 import com.attendance.management.entity.Course;
 import com.attendance.management.entity.ProfessorCourse;
@@ -67,6 +68,11 @@ public class StudentCourseService {
         studentCourse.setCourse(courseOpt.get());
 
         return studentCourseRepository.save(studentCourse);
+    }
+
+    // Method to get courses a student is enrolled in
+    public List<CourseEnrollmentResponseDto> getEnrolledCourses(String studentUniqueId) {
+        return studentCourseRepository.findEnrolledCoursesByStudentUniqueId(studentUniqueId);
     }
 
     // Fetch students enrolled in a course by courseNo and professorUniqueId

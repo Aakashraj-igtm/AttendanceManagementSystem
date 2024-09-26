@@ -9,8 +9,12 @@ import com.attendance.management.service.JwtAuthenticationService;
 import com.attendance.management.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -43,9 +47,9 @@ public class UserController {
             user.setPhoneNumber(request.getPhoneNumber());
             user.setEmail(request.getEmail());
             userService.registerUser(user, request.getRole());
-            return ResponseEntity.status(HttpStatus.CREATED).body(
-                    "User registered successfully with uniqueId: " + user.getUniqueId()
-            );
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "User registered successfully with uniqueId: " + user.getUniqueId());
+            return ResponseEntity.status(HttpStatus.CREATED).contentType(MediaType.APPLICATION_JSON).body(response);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: " + e.getMessage());
         }
