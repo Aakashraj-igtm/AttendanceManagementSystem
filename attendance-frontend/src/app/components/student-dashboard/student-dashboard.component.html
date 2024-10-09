@@ -1,13 +1,37 @@
-<div *ngIf="message" class="error-message">
-    {{ message }}
-  </div>
-  
-  <div *ngIf="courses.length > 0" class="course-container">
-    <div *ngFor="let course of courses" class="course-card">
-      <h3>{{ course.courseName }}</h3>
-      <p><strong>Course No:</strong> {{ course.courseNo }}</p>
-      <p>{{ course.courseDescription }}</p>
-      <p><strong>Professor:</strong> {{ course.professorName }} ({{ course.professorUniqueId }})</p>
+<div *ngIf="courses.length > 0" class="course-container">
+  <div
+    *ngFor="let course of courses"
+    class="course-card"
+    (click)="onCourseClick(course.courseNo)"
+    [class.active]="selectedCourseNo === course.courseNo"
+  >
+    <h3 class="course-title">{{ course.courseName }}</h3>
+    <p><strong>Course No:</strong> {{ course.courseNo }}</p>
+    <p>{{ course.courseDescription }}</p>
+    <p>
+      <strong>Professor:</strong> {{ course.professorName }} ({{
+        course.professorUniqueId
+      }})
+    </p>
+
+    <!-- Add a separator here -->
+    <hr class="course-separator" *ngIf="selectedCourseNo === course.courseNo" />
+
+    <!-- Attendance details inside the card -->
+    <div
+      *ngIf="selectedCourseNo === course.courseNo && selectedAttendance"
+      class="attendance-details"
+    >
+      <h4>Attendance Details</h4>
+      <p>
+        <strong>Attendance Percentage:</strong>
+        {{ selectedAttendance.attendancePercentage }}%
+      </p>
+      <p>
+        <strong>Minimum Required Attendance:</strong>
+        {{ selectedAttendance.minAttendancePercentage }}%
+      </p>
+      <p>{{ attendanceMessage }}</p>
     </div>
   </div>
-  
+</div>
