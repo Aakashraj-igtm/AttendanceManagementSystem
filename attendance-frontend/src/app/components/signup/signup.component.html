@@ -1,0 +1,42 @@
+<div class="container">
+  <div class="header">
+    <h1>Attendance Management System</h1>
+    <p>Register as a new user</p>
+  </div>
+
+  <form (ngSubmit)="onSignup()">
+    <label for="username">Username:</label>
+    <input id="username" [(ngModel)]="userDetails.username" name="username" required>
+
+    <label for="password">Password:</label>
+    <input id="password" type="password" [(ngModel)]="userDetails.password" name="password" required>
+
+    <label for="firstName">First Name:</label>
+    <input id="firstName" [(ngModel)]="userDetails.firstName" name="firstName" required>
+
+    <label for="lastName">Last Name:</label>
+    <input id="lastName" [(ngModel)]="userDetails.lastName" name="lastName" required>
+
+    <label for="phoneNumber">Phone Number:</label>
+    <input id="phoneNumber" [(ngModel)]="userDetails.phoneNumber" name="phoneNumber" required>
+
+    <label for="email">Email:</label>
+    <input id="email" [(ngModel)]="userDetails.email" name="email" required>
+
+    <label for="role">Role:</label>
+    <select id="role" [(ngModel)]="userDetails.role" name="role" required>
+      <option value="Student">Student</option>
+      <option value="Professor">Professor</option>
+      <option value="Admin">Admin</option>
+    </select>
+
+    <button type="submit">Signup</button>
+  </form>
+
+  <div *ngIf="successMessage" class="success-message">{{ successMessage }}</div>
+  <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+
+  <div>
+    <p>Already have an account? <a routerLink="/login">Login Here</a></p>
+  </div>
+</div>

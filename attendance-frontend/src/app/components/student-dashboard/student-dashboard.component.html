@@ -1,0 +1,13 @@
+<div *ngIf="message" class="error-message">
+    {{ message }}
+  </div>
+  
+  <div *ngIf="courses.length > 0" class="course-container">
+    <div *ngFor="let course of courses" class="course-card">
+      <h3>{{ course.courseName }}</h3>
+      <p><strong>Course No:</strong> {{ course.courseNo }}</p>
+      <p>{{ course.courseDescription }}</p>
+      <p><strong>Professor:</strong> {{ course.professorName }} ({{ course.professorUniqueId }})</p>
+    </div>
+  </div>
+  

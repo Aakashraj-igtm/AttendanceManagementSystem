@@ -1,0 +1,106 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
+    margin: 0;
+    padding: 20px; /* Add padding to prevent content cut-off */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Ensure full viewport height */
+    overflow-y: auto; /* Enable scrolling for overflow */
+  }
+  
+  
+  h1, h2 {
+    text-align: center;
+    color: #333;
+  }
+  
+  /* Container Styling */
+.container {
+    background-color: #fff;
+    padding: 30px; /* Increase padding */
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 500px; /* Increase width if necessary */
+    width: 100%;
+    overflow-y: auto; /* Ensure overflow is handled */
+    max-height: 90vh; /* Ensure it doesn't exceed the viewport */
+  }
+  
+ /* Header Styling */
+.header {
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .header h1 {
+    font-size: 2.5rem;
+    color: #007bff;
+    margin-top: 0; /* Ensure there is no negative margin */
+    padding-top: 10px; /* Add padding if necessary */
+  }
+  
+  .header p {
+    margin-top: 0;
+    font-size: 1rem;
+  }
+  
+  /* Form Styling */
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  label {
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  
+  input, select {
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+  }
+  
+  button {
+    padding: 10px;
+    font-size: 1rem;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Link Styling */
+  a {
+    color: #007bff;
+    text-decoration: none;
+    font-size: 0.9rem;
+    margin-top: 10px;
+    text-align: center;
+  }
+  
+  a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Error and Success Message Styling */
+  .error-message {
+    color: red;
+    font-weight: bold;
+  }
+  
+  .success-message {
+    color: green;
+    font-weight: bold;
+  }
+  
