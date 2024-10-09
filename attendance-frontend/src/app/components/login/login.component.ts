@@ -19,9 +19,8 @@ export class LoginComponent implements OnInit {
         // Save the JWT token in localStorage/sessionStorage
         console.log(response.token)
         localStorage.setItem('authToken', response.token);
-        console.log('Token set:', sessionStorage.getItem('authToken'));
-        sessionStorage.setItem('uniqueId', response.uniqueId);
-        sessionStorage.setItem('userRole', response.role);
+        localStorage.setItem('uniqueId', response.uniqueId);
+        localStorage.setItem('userRole', response.role);
         // Redirect to a secure route (e.g., dashboard)
         if(response.role == 'Student')
           console.log('hi')
